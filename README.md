@@ -269,6 +269,4 @@ npm run lint     # ESLint check
 
 ---
 
-## License
 
-Internal — Cognizant / Ford Motor Company. Not for public distribution.
