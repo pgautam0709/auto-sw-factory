@@ -102,47 +102,42 @@ const defaultStats: FactoryStats = {
 const FactoryContext = createContext<FactoryContextValue | null>(null);
 
 export function FactoryProvider({ children }: { children: ReactNode }) {
-  const [feature, setFeatureState] = useState<FactoryFeature | null>(
-    () => load<FactoryFeature | null>(KEYS.feature, null)
-  );
-  const [requirements, setRequirementsState] = useState<Requirements | null>(
-    () => load<Requirements | null>(KEYS.requirements, null)
-  );
-  const [development, setDevelopmentState] = useState<DevelopmentArtifacts | null>(
-    () => load<DevelopmentArtifacts | null>(KEYS.development, null)
-  );
-  const [validation, setValidationState] = useState<ValidationResult | null>(
-    () => load<ValidationResult | null>(KEYS.validation, null)
-  );
-  const [quality, setQualityState] = useState<QualityMetrics | null>(
-    () => load<QualityMetrics | null>(KEYS.quality, null)
-  );
-  const [release, setReleaseState] = useState<ReleasePackage | null>(
-    () => load<ReleasePackage | null>(KEYS.release, null)
-  );
-  const [fleet, setFleetState] = useState<FleetIntelligence | null>(
-    () => load<FleetIntelligence | null>(KEYS.fleet, null)
-  );
-  const [currentStage, setCurrentStage] = useState<FactoryStage>(
-    () => load<FactoryStage>(KEYS.stage, 'idle')
-  );
-  const [stats, setStats] = useState<FactoryStats>(
-    () => load<FactoryStats>(KEYS.stats, defaultStats)
-  );
-  const [history, setHistory] = useState<FeatureRecord[]>(
-    () => load<FeatureRecord[]>(KEYS.history, [])
-  );
+  const [hydrated, setHydrated] = useState(false);
+  const [feature, setFeatureState] = useState<FactoryFeature | null>(null);
+  const [requirements, setRequirementsState] = useState<Requirements | null>(null);
+  const [development, setDevelopmentState] = useState<DevelopmentArtifacts | null>(null);
+  const [validation, setValidationState] = useState<ValidationResult | null>(null);
+  const [quality, setQualityState] = useState<QualityMetrics | null>(null);
+  const [release, setReleaseState] = useState<ReleasePackage | null>(null);
+  const [fleet, setFleetState] = useState<FleetIntelligence | null>(null);
+  const [currentStage, setCurrentStage] = useState<FactoryStage>('idle');
+  const [stats, setStats] = useState<FactoryStats>(defaultStats);
+  const [history, setHistory] = useState<FeatureRecord[]>([]);
 
-  useEffect(() => { save(KEYS.feature, feature); }, [feature]);
-  useEffect(() => { save(KEYS.requirements, requirements); }, [requirements]);
-  useEffect(() => { save(KEYS.development, development); }, [development]);
-  useEffect(() => { save(KEYS.validation, validation); }, [validation]);
-  useEffect(() => { save(KEYS.quality, quality); }, [quality]);
-  useEffect(() => { save(KEYS.release, release); }, [release]);
-  useEffect(() => { save(KEYS.fleet, fleet); }, [fleet]);
-  useEffect(() => { save(KEYS.stage, currentStage); }, [currentStage]);
-  useEffect(() => { save(KEYS.stats, stats); }, [stats]);
-  useEffect(() => { save(KEYS.history, history); }, [history]);
+  useEffect(() => {
+    setFeatureState(load<FactoryFeature | null>(KEYS.feature, null));
+    setRequirementsState(load<Requirements | null>(KEYS.requirements, null));
+    setDevelopmentState(load<DevelopmentArtifacts | null>(KEYS.development, null));
+    setValidationState(load<ValidationResult | null>(KEYS.validation, null));
+    setQualityState(load<QualityMetrics | null>(KEYS.quality, null));
+    setReleaseState(load<ReleasePackage | null>(KEYS.release, null));
+    setFleetState(load<FleetIntelligence | null>(KEYS.fleet, null));
+    setCurrentStage(load<FactoryStage>(KEYS.stage, 'idle'));
+    setStats(load<FactoryStats>(KEYS.stats, defaultStats));
+    setHistory(load<FeatureRecord[]>(KEYS.history, []));
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => { if (hydrated) save(KEYS.feature, feature); }, [hydrated, feature]);
+  useEffect(() => { if (hydrated) save(KEYS.requirements, requirements); }, [hydrated, requirements]);
+  useEffect(() => { if (hydrated) save(KEYS.development, development); }, [hydrated, development]);
+  useEffect(() => { if (hydrated) save(KEYS.validation, validation); }, [hydrated, validation]);
+  useEffect(() => { if (hydrated) save(KEYS.quality, quality); }, [hydrated, quality]);
+  useEffect(() => { if (hydrated) save(KEYS.release, release); }, [hydrated, release]);
+  useEffect(() => { if (hydrated) save(KEYS.fleet, fleet); }, [hydrated, fleet]);
+  useEffect(() => { if (hydrated) save(KEYS.stage, currentStage); }, [hydrated, currentStage]);
+  useEffect(() => { if (hydrated) save(KEYS.stats, stats); }, [hydrated, stats]);
+  useEffect(() => { if (hydrated) save(KEYS.history, history); }, [hydrated, history]);
 
   const setFeature = useCallback((f: FactoryFeature) => {
     setFeatureState(f);

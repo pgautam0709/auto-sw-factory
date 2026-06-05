@@ -31,6 +31,10 @@ Rules:
 - ASIL levels must reflect the safety criticality of the requirement (Safety-critical = ASIL-B or higher)
 - App/service requirements must reference specific software concerns (latency SLAs, auth, data schemas, retry policies, etc.)
 - Do not duplicate intent across levels — each level adds detail not present in the one above
+- User story fields are rendered as: "As a {role}, I want to {action}, so that {benefit}."
+  - "role": a person or system actor only (e.g. "driver", "fleet manager") — no prefix
+  - "action": completes the phrase "I want to ___" — do NOT start with "want", "want to", or "I want"
+  - "benefit": completes the phrase "so that ___" — do NOT start with "so that", "to ", or repeat "so"
 `;
 
 export const DEVELOPMENT_PROMPT = (feature: string) => `

@@ -6,6 +6,13 @@ import { useFactory } from '@/context/FactoryContext';
 import { FileText, Loader2, ArrowRight, CheckCircle2, AlertCircle, Cpu, Code2 } from 'lucide-react';
 import type { Requirements } from '@/types';
 
+function cleanAction(s: string) {
+  return s.replace(/^(i\s+want\s+to\s+|want\s+to\s+|want\s+)/i, '');
+}
+function cleanBenefit(s: string) {
+  return s.replace(/^(so\s+that\s+|so\s+|to\s+)/i, '');
+}
+
 const priorityColors = {
   High: 'bg-red-100 text-red-700 border-red-200',
   Medium: 'bg-amber-100 text-amber-700 border-amber-200',
@@ -278,8 +285,8 @@ export default function RequirementsPage() {
                   </div>
                   <p className="text-sm text-slate-700">
                     <span className="font-medium">As a</span> {story.role},{' '}
-                    <span className="font-medium">I want to</span> {story.action},{' '}
-                    <span className="font-medium">so that</span> {story.benefit}.
+                    <span className="font-medium">I want to</span> {cleanAction(story.action)},{' '}
+                    <span className="font-medium">so that</span> {cleanBenefit(story.benefit)}.
                   </p>
                 </div>
               ))}
