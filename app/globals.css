@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
+/* Ford Motor Company corporate brand colors */
+@theme {
+  --color-ford-50:  #EEF4FB;
+  --color-ford-100: #D4E5F5;
+  --color-ford-200: #A8CBE9;
+  --color-ford-300: #6AA8D8;
+  --color-ford-400: #2E82C4;
+  --color-ford-500: #0062B1;
+  --color-ford-600: #003476;
+  --color-ford-700: #002558;
+  --color-ford-800: #001840;
+  --color-ford-900: #000D26;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #F3F6FA;
+  --foreground: #0F172A;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.animate-fade-in-delay {
+  animation: fadeIn 0.4s ease-out 0.15s both;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
 }
