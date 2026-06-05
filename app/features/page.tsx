@@ -70,8 +70,9 @@ function ArtifactSummary({ record }: { record: FeatureRecord }) {
         {record.requirements ? (
           <div className="space-y-0.5">
             <p className="text-xs text-slate-600">{record.requirements.systemRequirements.length} system reqs</p>
+            <p className="text-xs text-slate-600">{(record.requirements.ecuRequirements ?? []).length} ECU reqs</p>
+            <p className="text-xs text-slate-600">{(record.requirements.appServiceRequirements ?? []).length} app/svc reqs</p>
             <p className="text-xs text-slate-600">{record.requirements.userStories.length} user stories</p>
-            <p className="text-xs text-slate-600">{record.requirements.acceptanceCriteria.length} ACs</p>
           </div>
         ) : <p className="text-xs text-slate-400 italic">Not generated</p>}
       </div>

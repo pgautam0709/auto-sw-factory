@@ -1,11 +1,22 @@
 export const REQUIREMENTS_PROMPT = (feature: string) => `
 You are a senior automotive software requirements engineer at a Tier 1 OEM.
-Generate professional engineering requirements for the following vehicle feature: "${feature}".
+Generate a full three-level requirements breakdown for the vehicle feature: "${feature}".
+
+The three levels are:
+1. SYSTEM level — vehicle-level functional, safety, performance, and interface requirements
+2. ECU level — requirements allocated to specific ECUs (e.g. BCM, ADAS ECU, Instrument Cluster, Gateway ECU) including bus interface and ASIL classification
+3. APPLICATION/SERVICE level — software service and microservice requirements covering APIs, data handling, security, performance, and integration
 
 Return ONLY valid JSON matching this exact structure:
 {
   "systemRequirements": [
     { "id": "SYS-001", "description": "...", "category": "Functional|Safety|Performance|Interface", "priority": "High|Medium|Low" }
+  ],
+  "ecuRequirements": [
+    { "id": "ECU-001", "ecuName": "...", "description": "...", "interface": "CAN|LIN|FlexRay|Ethernet|SENT|SPI|I2C", "asilLevel": "QM|ASIL-A|ASIL-B|ASIL-C|ASIL-D", "priority": "High|Medium|Low" }
+  ],
+  "appServiceRequirements": [
+    { "id": "APP-001", "serviceName": "...", "description": "...", "category": "API|Data|Security|Performance|Integration", "priority": "High|Medium|Low" }
   ],
   "userStories": [
     { "id": "US-001", "role": "...", "action": "...", "benefit": "...", "priority": "High|Medium|Low" }
@@ -14,10 +25,12 @@ Return ONLY valid JSON matching this exact structure:
 }
 
 Rules:
-- Generate exactly 6 system requirements, 4 user stories, and 5 acceptance criteria
-- Use automotive-grade language (ISO 26262, AUTOSAR style)
-- Be specific and measurable
-- Reference real automotive standards where appropriate
+- Generate exactly 6 system requirements, 5 ECU requirements (across 3–4 distinct ECUs), 5 application/service requirements, 4 user stories, and 5 acceptance criteria
+- System requirements use ISO 26262 / AUTOSAR language; be specific and measurable
+- ECU requirements must name a real automotive ECU and reference a real vehicle bus protocol
+- ASIL levels must reflect the safety criticality of the requirement (Safety-critical = ASIL-B or higher)
+- App/service requirements must reference specific software concerns (latency SLAs, auth, data schemas, retry policies, etc.)
+- Do not duplicate intent across levels — each level adds detail not present in the one above
 `;
 
 export const DEVELOPMENT_PROMPT = (feature: string) => `

@@ -9,6 +9,7 @@ import type {
 
 export function getMockRequirements(featureName: string): Requirements {
   const f = featureName;
+  const slug = f.toLowerCase().replace(/\s+/g, '-');
   return {
     systemRequirements: [
       { id: 'SYS-001', description: `The ${f} system shall continuously monitor sensor data at a minimum sampling rate of 10 Hz.`, category: 'Functional', priority: 'High' },
@@ -17,6 +18,20 @@ export function getMockRequirements(featureName: string): Requirements {
       { id: 'SYS-004', description: `The ${f} system shall provide a human-machine interface alert via instrument cluster and audio notification.`, category: 'Interface', priority: 'Medium' },
       { id: 'SYS-005', description: `The ${f} system shall remain operational across the full vehicle operating temperature range of -40°C to +85°C.`, category: 'Performance', priority: 'Medium' },
       { id: 'SYS-006', description: `The ${f} system shall support over-the-air recalibration of threshold parameters without requiring a vehicle recall.`, category: 'Functional', priority: 'Low' },
+    ],
+    ecuRequirements: [
+      { id: 'ECU-001', ecuName: 'ADAS ECU', description: `The ADAS ECU shall sample the ${f} sensor input at ≥ 10 Hz and evaluate the threshold condition within a single 100 ms task cycle.`, interface: 'CAN', asilLevel: 'ASIL-B', priority: 'High' },
+      { id: 'ECU-002', ecuName: 'ADAS ECU', description: `The ADAS ECU shall transmit a ${f} alert CAN frame (ID: 0x3A2) with a maximum end-to-end latency of 20 ms on the high-speed CAN bus (500 kbps).`, interface: 'CAN', asilLevel: 'ASIL-B', priority: 'High' },
+      { id: 'ECU-003', ecuName: 'Instrument Cluster ECU', description: `The Instrument Cluster ECU shall receive the ${f} alert CAN frame and render the corresponding HMI warning icon within two display refresh cycles (≤ 40 ms at 50 Hz).`, interface: 'CAN', asilLevel: 'ASIL-A', priority: 'High' },
+      { id: 'ECU-004', ecuName: 'Body Control Module', description: `The BCM shall activate the ${f} audible chime output on the LIN cluster within 50 ms of receiving the alert signal, sustaining output for a minimum of 3 seconds.`, interface: 'LIN', asilLevel: 'QM', priority: 'Medium' },
+      { id: 'ECU-005', ecuName: 'Telematics Control Unit', description: `The TCU shall forward the ${f} event record to the cloud telematics backend over MQTT within 5 seconds of initial detection, with at-least-once delivery guarantee.`, interface: 'Ethernet', asilLevel: 'QM', priority: 'Medium' },
+    ],
+    appServiceRequirements: [
+      { id: 'APP-001', serviceName: `${f.replace(/\s+/g, '')}MonitorService`, description: `The MonitorService shall expose a REST GET /api/v1/${slug}/status endpoint returning sensor state, alert active flag, and ISO 8601 timestamp with P99 latency ≤ 50 ms.`, category: 'API', priority: 'High' },
+      { id: 'APP-002', serviceName: `${f.replace(/\s+/g, '')}EventService`, description: `The EventService shall persist all ${f} detection events to the vehicle event store with a schema versioned payload; schema changes must be backward-compatible for a minimum of 2 major versions.`, category: 'Data', priority: 'High' },
+      { id: 'APP-003', serviceName: `${f.replace(/\s+/g, '')}OTAConfigService`, description: `The OTAConfigService shall validate incoming calibration payloads against a signed JSON schema before applying; reject and log any payload with an invalid or expired signature.`, category: 'Security', priority: 'High' },
+      { id: 'APP-004', serviceName: `${f.replace(/\s+/g, '')}TelemetryService`, description: `The TelemetryService shall buffer up to 500 events in memory during connectivity loss and replay them in order upon reconnection with exponential back-off (max 30 s interval).`, category: 'Integration', priority: 'Medium' },
+      { id: 'APP-005', serviceName: `${f.replace(/\s+/g, '')}DiagnosticService`, description: `The DiagnosticService shall support UDS (ISO 14229) diagnostic session initiation over DoIP and return DTC snapshots for ${f} faults within 200 ms of request.`, category: 'Performance', priority: 'Medium' },
     ],
     userStories: [
       { id: 'US-001', role: 'vehicle driver', action: `receive a clear visual and audible alert when the ${f} condition is detected`, benefit: 'I can take immediate corrective action to maintain vehicle safety', priority: 'High' },

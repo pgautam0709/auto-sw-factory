@@ -15,6 +15,23 @@ export interface SystemRequirement {
   priority: 'High' | 'Medium' | 'Low';
 }
 
+export interface EcuRequirement {
+  id: string;
+  ecuName: string;
+  description: string;
+  interface: 'CAN' | 'LIN' | 'FlexRay' | 'Ethernet' | 'SENT' | 'SPI' | 'I2C';
+  asilLevel: 'QM' | 'ASIL-A' | 'ASIL-B' | 'ASIL-C' | 'ASIL-D';
+  priority: 'High' | 'Medium' | 'Low';
+}
+
+export interface AppServiceRequirement {
+  id: string;
+  serviceName: string;
+  description: string;
+  category: 'API' | 'Data' | 'Security' | 'Performance' | 'Integration';
+  priority: 'High' | 'Medium' | 'Low';
+}
+
 export interface UserStory {
   id: string;
   role: string;
@@ -25,6 +42,8 @@ export interface UserStory {
 
 export interface Requirements {
   systemRequirements: SystemRequirement[];
+  ecuRequirements: EcuRequirement[];
+  appServiceRequirements: AppServiceRequirement[];
   userStories: UserStory[];
   acceptanceCriteria: string[];
 }
